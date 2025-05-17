@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(UnityEngine.CharacterController))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -14,10 +14,11 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     public Animator animator;
 
-    private UnityEngine.CharacterController characterController;
+    private CharacterController characterController;
     private Vector3 velocity;
     private float currentSpeed;
     private float yaw;
+    private bool isOnLadder = false;
 
     private const float gravity = -20f;
 
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        characterController = GetComponent<UnityEngine.CharacterController>();
+        characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -56,11 +57,22 @@ public class PlayerController : MonoBehaviour
         CurrentInput = new Vector2(horizontal, vertical);
 
         Vector3 moveDirection = Vector3.zero;
+
         if (IsMoving)
         {
             moveDirection = Quaternion.Euler(0f, cameraTransform.eulerAngles.y, 0f) * inputDirection;
             bool isSprinting = Input.GetKey(KeyCode.LeftShift);
             currentSpeed = isSprinting ? SprintSpeed : WalkSpeed;
+        }
+
+        if (isOnLadder)
+        {
+            float verticalInput = Input.GetAxis("Vertical");
+            Vector3 ladderMovement = new Vector3(0f, verticalInput * currentSpeed, 0f);
+            characterController.Move(ladderMovement * Time.deltaTime);
+
+            // animator?.SetBool("isOnLadder", true);
+            return; // Salimos para no aplicar gravedad
         }
 
         if (Input.GetButtonDown("Jump") && IsGrounded)
@@ -94,11 +106,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = true;
+            velocity = Vector3.zero;
+
+            // Centrar jugador en la escalera (X,Z)
+            Vector3 centerXZ = new Vector3(other.bounds.center.x, transform.position.y, other.bounds.center.z);
+            transform.position = centerXZ;
+
+            // animator?.SetBool("isOnLadder", true);
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ladder"))
+        {
+            isOnLadder = false;
+            velocity = Vector3.zero;
+
+            // animator?.SetBool("isOnLadder", false);
+        }
+    }
+
     /* void UpdateAnimator()
     {
         float speedPercent = IsMoving ? (currentSpeed == SprintSpeed ? 1f : 0.5f) : 0f;
         animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
         animator?.SetBool("IsGrounded", IsGrounded);
         animator?.SetFloat("VerticalSpeed", velocity.y);
-    }*/
+    } */
 }
