@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleRotation();
-        //UpdateAnimator();
+        UpdateAnimator();
     }
 
     void HandleMovement()
@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
             Vector3 ladderMovement = new Vector3(0f, verticalInput * currentSpeed, 0f);
             characterController.Move(ladderMovement * Time.deltaTime);
 
-            // animator?.SetBool("isOnLadder", true);
+            animator?.SetBool("isOnLadder", true);
             return; // Salimos para no aplicar gravedad
         }
 
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
         if (IsGrounded && velocity.y < 0f)
         {
-            // animator?.SetBool("isJumping", false);
+            animator?.SetBool("isJumping", false);
         }
     }
 
@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
             Vector3 centerXZ = new Vector3(other.bounds.center.x, transform.position.y, other.bounds.center.z);
             transform.position = centerXZ;
 
-            // animator?.SetBool("isOnLadder", true);
+            animator?.SetBool("isOnLadder", true);
         }
     }
 
@@ -128,15 +128,15 @@ public class PlayerController : MonoBehaviour
             isOnLadder = false;
             velocity = Vector3.zero;
 
-            // animator?.SetBool("isOnLadder", false);
+            animator?.SetBool("isOnLadder", false);
         }
     }
 
-    /* void UpdateAnimator()
+    void UpdateAnimator()
     {
         float speedPercent = IsMoving ? (currentSpeed == SprintSpeed ? 1f : 0.5f) : 0f;
         animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
         animator?.SetBool("IsGrounded", IsGrounded);
         animator?.SetFloat("VerticalSpeed", velocity.y);
-    } */
+    } 
 }
