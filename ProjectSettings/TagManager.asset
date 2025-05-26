@@ -10,6 +10,8 @@ TagManager:
   - Ladder
   - Enemigo
   - Girasol
+  - LadderTop
+  - LadderBottom
   layers:
   - Default
   - TransparentFX

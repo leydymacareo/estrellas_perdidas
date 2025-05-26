@@ -119,25 +119,21 @@ public class PlayerController : MonoBehaviour
             Vector3 centerXZ = new Vector3(other.bounds.center.x, transform.position.y, other.bounds.center.z);
             transform.position = centerXZ;
 
-            // ✅ Girar hacia la escalera
-            Vector3 lookDirection = -other.transform.forward; // Ajusta si rota mal
-            lookDirection.y = 0f; // evitar inclinación vertical
+            // Girar hacia la escalera
+            Vector3 lookDirection = -other.transform.forward;
+            lookDirection.y = 0f;
             transform.rotation = Quaternion.LookRotation(lookDirection);
 
-            animator?.SetBool("isOnLadder", true);
+            animator.SetBool("isOnLadder", true);
         }
+
 
     }
 
+
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Ladder"))
-        {
-            isOnLadder = false;
-            velocity = Vector3.zero;
 
-            animator?.SetBool("isOnLadder", false);
-        }
     }
 
     void UpdateAnimator()
@@ -152,5 +148,86 @@ public class PlayerController : MonoBehaviour
         animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
         animator?.SetBool("IsGrounded", IsGrounded);
         animator?.SetFloat("VerticalSpeed", velocity.y);
-    } 
+    }
+
+    void ExitLadder()
+    {
+        isOnLadder = false;
+        velocity = Vector3.zero;
+        animator.SetBool("isOnLadder", false);
+
+        // Empuje hacia adelante y un poco hacia arriba para salir de la escalera
+        Vector3 offset = transform.forward * 0.6f + Vector3.up * 0.3f;
+        characterController.Move(offset);
+
+        Debug.Log("ExitLadder ejecutado");
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        float verticalInput = Input.GetAxis("Vertical");
+
+        if (other.CompareTag("LadderBottom"))
+        {
+            Debug.Log("🧩 Dentro del LadderBottom");
+
+            if (!isOnLadder && verticalInput > 0f)
+            {
+                Debug.Log("⬆ Entrando a la escalera desde abajo");
+                EnterLadder(other, false); // Desde abajo
+            }
+            else if (isOnLadder && verticalInput < 0f)
+            {
+                Debug.Log("⬇ Saliendo de la escalera hacia abajo");
+                ExitLadder();
+            }
+        }
+
+        if (other.CompareTag("LadderTop"))
+        {
+            Debug.Log("🧩 Dentro del LadderTop");
+
+            if (!isOnLadder && verticalInput < 0f)
+            {
+                Debug.Log("⬇ Entrando a la escalera desde arriba");
+                EnterLadder(other, true); // Desde arriba
+            }
+            else if (isOnLadder && verticalInput > 0f)
+            {
+                Debug.Log("⬆ Saliendo de la escalera hacia arriba");
+                ExitLadder();
+            }
+        }
+
+    }
+
+    void EnterLadder(Collider trigger, bool desdeArriba)
+    {
+        isOnLadder = true;
+        velocity = Vector3.zero;
+
+        // Encontrar el punto de anclaje para entrar a la escalera (debe estar en el padre)
+        Transform snapPoint = trigger.transform.parent.Find("LadderSnapPoint");
+
+        if (snapPoint == null)
+        {
+            Debug.LogWarning("❌ No se encontró LadderSnapPoint en la escalera");
+            return;
+        }
+
+        float targetY = desdeArriba ? snapPoint.position.y : transform.position.y;
+        Vector3 snapPosition = new Vector3(snapPoint.position.x, targetY, snapPoint.position.z);
+        transform.position = snapPosition;
+
+        // Mirar hacia la escalera
+        Vector3 lookDirection = -trigger.transform.parent.forward;
+        lookDirection.y = 0f;
+        transform.rotation = Quaternion.LookRotation(lookDirection);
+
+        animator.SetBool("isOnLadder", true);
+        Debug.Log("🎯 Entró a la escalera correctamente alineado al SnapPoint");
+    }
+
+
+
 }
