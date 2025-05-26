@@ -116,12 +116,17 @@ public class PlayerController : MonoBehaviour
             isOnLadder = true;
             velocity = Vector3.zero;
 
-            // Centrar jugador en la escalera (X,Z)
             Vector3 centerXZ = new Vector3(other.bounds.center.x, transform.position.y, other.bounds.center.z);
             transform.position = centerXZ;
 
+            // ✅ Girar hacia la escalera
+            Vector3 lookDirection = -other.transform.forward; // Ajusta si rota mal
+            lookDirection.y = 0f; // evitar inclinación vertical
+            transform.rotation = Quaternion.LookRotation(lookDirection);
+
             animator?.SetBool("isOnLadder", true);
         }
+
     }
 
     void OnTriggerExit(Collider other)
@@ -138,14 +143,14 @@ public class PlayerController : MonoBehaviour
     void UpdateAnimator()
     {
         float inputX = Input.GetAxis("Horizontal");
-    float inputZ = Input.GetAxis("Vertical");
-    float inputMagnitude = new Vector2(inputX, inputZ).magnitude;
+        float inputZ = Input.GetAxis("Vertical");
+        float inputMagnitude = new Vector2(inputX, inputZ).magnitude;
 
-    bool isSprinting = Input.GetKey(KeyCode.LeftShift);
-    float speedPercent = isSprinting ? inputMagnitude : inputMagnitude * 0.5f;
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+        float speedPercent = isSprinting ? inputMagnitude : inputMagnitude * 0.5f;
 
-    animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
-    animator?.SetBool("IsGrounded", IsGrounded);
-    animator?.SetFloat("VerticalSpeed", velocity.y);
+        animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
+        animator?.SetBool("IsGrounded", IsGrounded);
+        animator?.SetFloat("VerticalSpeed", velocity.y);
     } 
 }
