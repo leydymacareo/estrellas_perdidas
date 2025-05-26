@@ -134,9 +134,15 @@ public class PlayerController : MonoBehaviour
 
     void UpdateAnimator()
     {
-        float speedPercent = IsMoving ? (currentSpeed == SprintSpeed ? 1f : 0.5f) : 0f;
-        animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
-        animator?.SetBool("IsGrounded", IsGrounded);
-        animator?.SetFloat("VerticalSpeed", velocity.y);
+        float inputX = Input.GetAxis("Horizontal");
+    float inputZ = Input.GetAxis("Vertical");
+    float inputMagnitude = new Vector2(inputX, inputZ).magnitude;
+
+    bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+    float speedPercent = isSprinting ? inputMagnitude : inputMagnitude * 0.5f;
+
+    animator?.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
+    animator?.SetBool("IsGrounded", IsGrounded);
+    animator?.SetFloat("VerticalSpeed", velocity.y);
     } 
 }
