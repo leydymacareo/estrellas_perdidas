@@ -71,8 +71,11 @@ public class PlayerController : MonoBehaviour
             Vector3 ladderMovement = new Vector3(0f, verticalInput * currentSpeed, 0f);
             characterController.Move(ladderMovement * Time.deltaTime);
 
-            animator?.SetBool("isOnLadder", true);
-            return; // Salimos para no aplicar gravedad
+            animator.SetBool("isOnLadder", true);
+            animator.SetFloat("ClimbSpeed", Mathf.Abs(verticalInput)); // 0 = quieto, 1 = subiendo
+
+            return; // salimos del resto del movimiento
+
         }
 
         if (Input.GetButtonDown("Jump") && IsGrounded)
