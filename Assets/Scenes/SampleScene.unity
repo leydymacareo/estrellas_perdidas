@@ -2416,7 +2416,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -2702,7 +2702,7 @@ GameObject:
   - component: {fileID: 823164244}
   - component: {fileID: 823164243}
   m_Layer: 0
-  m_Name: cubo_escalera (2)
+  m_Name: LadderTop
   m_TagString: LadderTop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2790,12 +2790,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 823164242}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.585, y: 7.43, z: 6.56}
-  m_LocalScale: {x: 0.128468, y: 0.05, z: 0.7}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.0332, y: -0.226, z: 0.2073}
+  m_LocalScale: {x: 0.0007137112, y: 0.0016666666, z: 0.0058333324}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1478267223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &887551632 stripped
 GameObject:
@@ -3971,7 +3971,7 @@ GameObject:
   - component: {fileID: 1278758789}
   - component: {fileID: 1278758788}
   m_Layer: 0
-  m_Name: cubo_escalera
+  m_Name: Ladder
   m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4059,13 +4059,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278758787}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.585, y: 4.26, z: 7.415}
-  m_LocalScale: {x: 0.1, y: 3.3, z: 0.9954}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.033208333, y: -0.33166665, z: 0.20641665}
+  m_LocalScale: {x: 0.0005555556, y: 0.10999999, z: 0.008295}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1637656408}
-  m_Father: {fileID: 0}
+  m_Children: []
+  m_Father: {fileID: 1478267223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1305094940
 PrefabInstance:
@@ -4192,7 +4191,7 @@ GameObject:
   - component: {fileID: 1314432476}
   - component: {fileID: 1314432475}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: LadderBottom
   m_TagString: LadderBottom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4206,12 +4205,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314432473}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.57, y: 2.56, z: 7.4}
-  m_LocalScale: {x: 0.30000007, y: 0.14280117, z: 1.5000005}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.033083335, y: -0.3883333, z: 0.20649998}
+  m_LocalScale: {x: 0.0016666672, y: 0.0047600386, z: 0.012500005}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1478267223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1314432475
 BoxCollider:
@@ -4622,6 +4621,41 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 887551636}
   m_SourcePrefab: {fileID: 100100000, guid: b6fb18a4b04984d898bd3b9e1f7239d6, type: 3}
+--- !u!1 &1478267222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1478267223}
+  m_Layer: 0
+  m_Name: LadderLogicRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1478267223
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478267222}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -2.4, y: 14.21, z: 44.57}
+  m_LocalScale: {x: 120, y: 30, z: 180}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 823164246}
+  - {fileID: 1314432474}
+  - {fileID: 1637656408}
+  - {fileID: 1278758791}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1486952331 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b6fb18a4b04984d898bd3b9e1f7239d6, type: 3}
@@ -4698,12 +4732,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637656407}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.3, y: 0.561, z: -0.01}
-  m_LocalScale: {x: 60.27726, y: 9.090909, z: 899.99976}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: -0.033125382, y: -0.27941665, z: 0.20713888}
+  m_LocalScale: {x: 0.49999994, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1278758791}
+  m_Father: {fileID: 1478267223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1697764832 stripped
 GameObject:
@@ -5797,7 +5831,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -6374,8 +6408,6 @@ SceneRoots:
   - {fileID: 354991736}
   - {fileID: 230190369}
   - {fileID: 1169404705}
-  - {fileID: 1278758791}
-  - {fileID: 823164246}
   - {fileID: 1472784731}
   - {fileID: 468052735}
   - {fileID: 447601937}
@@ -6389,10 +6421,10 @@ SceneRoots:
   - {fileID: 2134423944}
   - {fileID: 1712080135}
   - {fileID: 493200309}
+  - {fileID: 1478267223}
   - {fileID: 676935054}
   - {fileID: 1876162882}
   - {fileID: 534512149}
-  - {fileID: 1314432474}
   - {fileID: 1305094940}
   - {fileID: 535178441}
   - {fileID: 1047303310}
