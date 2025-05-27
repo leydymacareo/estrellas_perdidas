@@ -67,8 +67,12 @@ public class PlayerController : MonoBehaviour
 
         if (isOnLadder)
         {
+            
+
             float verticalInput = Input.GetAxis("Vertical");
+            
             Vector3 ladderMovement = new Vector3(0f, verticalInput * currentSpeed, 0f);
+            
             characterController.Move(ladderMovement * Time.deltaTime);
 
             animator.SetBool("isOnLadder", true);
@@ -185,6 +189,8 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("LadderTop"))
         {
+            Debug.Log(isOnLadder);
+            Debug.Log(verticalInput);
             Debug.Log("🧩 Dentro del LadderTop");
 
             if (!isOnLadder && verticalInput < 0f)
@@ -203,23 +209,25 @@ public class PlayerController : MonoBehaviour
 
     void EnterLadder(Collider trigger, bool desdeArriba)
     {
+        Debug.Log("EnterLadder ejecutado");
+
         isOnLadder = true;
         velocity = Vector3.zero;
 
-        // Encontrar el punto de anclaje para entrar a la escalera (debe estar en el padre)
         Transform snapPoint = trigger.transform.parent.Find("LadderSnapPoint");
-
         if (snapPoint == null)
         {
             Debug.LogWarning("❌ No se encontró LadderSnapPoint en la escalera");
             return;
         }
 
-        float targetY = desdeArriba ? snapPoint.position.y : transform.position.y;
-        Vector3 snapPosition = new Vector3(snapPoint.position.x, targetY, snapPoint.position.z);
+        // Si entra desde arriba, lo bajamos un poco más para "encajarlo" dentro de la escalera
+        float snapY = desdeArriba ? snapPoint.position.y - 0.1f : transform.position.y;
+
+        Vector3 snapPosition = new Vector3(snapPoint.position.x, snapY, snapPoint.position.z);
         transform.position = snapPosition;
 
-        // Mirar hacia la escalera
+        // Girar hacia la escalera
         Vector3 lookDirection = -trigger.transform.parent.forward;
         lookDirection.y = 0f;
         transform.rotation = Quaternion.LookRotation(lookDirection);
