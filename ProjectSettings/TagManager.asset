@@ -12,6 +12,8 @@ TagManager:
   - Girasol
   - LadderTop
   - LadderBottom
+  - Mancha
+  - PuntoDebil
   layers:
   - Default
   - TransparentFX
