@@ -11,19 +11,9 @@ public class LiveSystem : MonoBehaviour
     public TextMeshProUGUI livesText;
     private float ultimoDaño = -999f;
     public float tiempoInvulnerabilidad = 1.0f;
-    private float tiempoInvulnerabilidadPorPuntoDebil = 2f;
-    private bool vulnerable = true;
+   
 
-    public void ActivarInmunidadCorta()
-    {
-        vulnerable = false;
-        Invoke(nameof(ReactivarVulnerabilidad), tiempoInvulnerabilidadPorPuntoDebil);
-    }
 
-    private void ReactivarVulnerabilidad()
-    {
-        vulnerable = true;
-    }
 
     void Start()
     {
@@ -50,8 +40,10 @@ public class LiveSystem : MonoBehaviour
 
     public void QuitarVida()
     {
-        if (!vulnerable || Time.time - ultimoDaño < tiempoInvulnerabilidad)
-            return;
+        if (Time.time - ultimoDaño < tiempoInvulnerabilidad)
+        {
+            return; // Jugador aún está invulnerable
+        }
 
         ultimoDaño = Time.time;
         currentLives--;
@@ -59,11 +51,11 @@ public class LiveSystem : MonoBehaviour
 
         if (currentLives <= -1)
         {
-            SceneManager.LoadScene("PlatformerGame");
+            SceneManager.LoadScene("PlatformerGame"); // Reiniciar escena
         }
         else
         {
-            transform.position = respawnPoint.position;
+            transform.position = respawnPoint.position; // Hacer respawn
         }
     }
 

@@ -236,23 +236,19 @@ public class PlayerController : MonoBehaviour
         Debug.Log("🎯 Entró a la escalera correctamente alineado al SnapPoint");
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    // Puedes eliminar este método entero de PlayerController:
+void OnControllerColliderHit(ControllerColliderHit hit)
+{
+    if (hit.collider.CompareTag("Mancha"))
     {
-        // Si el jugador está tocando el punto débil, no hacemos nada
-        if (hit.collider.GetComponent<PuntoDebil>() != null)
+        ManchaEnemiga mancha = hit.collider.GetComponent<ManchaEnemiga>();
+        if (mancha != null)
         {
-            Debug.Log("🎯 Tocado el punto débil. No se quita vida.");
-            return;
-        }
-        if (hit.collider.CompareTag("Mancha"))
-        {
-            ManchaEnemiga mancha = hit.collider.GetComponent<ManchaEnemiga>();
-            if (mancha != null)
-            {
-                mancha.SerTocado(transform); // le pasamos la posición del jugador
-            }
+            mancha.SerTocado(transform);
         }
     }
+}
+
 
 
 }

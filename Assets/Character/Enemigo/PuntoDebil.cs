@@ -8,16 +8,7 @@ public class PuntoDebil : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("☠️ Punto débil tocado. Mancha destruida.");
-
-            // Activar inmunidad temporal al jugador
-            LiveSystem vidas = other.GetComponentInParent<LiveSystem>();
-            if (vidas != null)
-            {
-                vidas.ActivarInmunidadCorta();
-            }
-
-            Destroy(ENEMY);
+            Destroy(ENEMY); // destruye la mancha completa
         }
     }
-
 }
