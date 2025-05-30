@@ -76,19 +76,10 @@ public class LiveSystem : MonoBehaviour
     {
         if (other.CompareTag("DeadZone"))
         {
-            currentLives--;
-            Debug.Log("Vidas restantes: " + currentLives);
-
-            if (currentLives <= -1)
-            {
-                SceneManager.LoadScene("PlatformerGame");
-            }
-            else
-            {
-                transform.position = respawnPoint.position;
-            }
+            QuitarVida(); // ✅ Ya maneja invulnerabilidad y respawn correctamente
         }
     }
+
     public void AgregarVida()
     {
         if (currentLives < maxLives)

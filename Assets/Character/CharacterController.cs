@@ -113,15 +113,19 @@ public class PlayerController : MonoBehaviour
 
         if (horizontal < 0)
         {
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f); // izquierda
         }
         else if (horizontal > 0)
         {
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f); // derecha
         }
         else if (vertical > 0)
         {
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f); // frente
+        }
+        else if (vertical < 0)
+        {
+            transform.rotation = Quaternion.Euler(0f, 180f, 0f); // atrás
         }
     }
 
