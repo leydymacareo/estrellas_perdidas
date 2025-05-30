@@ -235,19 +235,27 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isOnLadder", true);
         Debug.Log("🎯 Entró a la escalera correctamente alineado al SnapPoint");
     }
+    
+    public void Rebotar()
+    {
+        // Rebote más suave que un salto normal
+        velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity) * 1f;
+        animator?.SetBool("isJumping", true); // activa animación de salto si quieres
+    }
+
 
     // Puedes eliminar este método entero de PlayerController:
-void OnControllerColliderHit(ControllerColliderHit hit)
-{
-    if (hit.collider.CompareTag("Mancha"))
+        void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        ManchaEnemiga mancha = hit.collider.GetComponent<ManchaEnemiga>();
-        if (mancha != null)
+        if (hit.collider.CompareTag("Mancha"))
         {
-            mancha.SerTocado(transform);
+            ManchaEnemiga mancha = hit.collider.GetComponent<ManchaEnemiga>();
+            if (mancha != null)
+            {
+                mancha.SerTocado(transform);
+            }
         }
     }
-}
 
 
 

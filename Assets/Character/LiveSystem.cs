@@ -55,9 +55,22 @@ public class LiveSystem : MonoBehaviour
         }
         else
         {
-            transform.position = respawnPoint.position; // Hacer respawn
+            CharacterController controller = GetComponent<CharacterController>();
+            if (controller != null)
+            {
+                controller.enabled = false;
+                transform.position = respawnPoint.position;
+                controller.enabled = true;
+            }
+            else
+            {
+                transform.position = respawnPoint.position;
+            }
         }
+
+        UpdateLivesUI();
     }
+
 
     void OnTriggerEnter(Collider other)
     {
