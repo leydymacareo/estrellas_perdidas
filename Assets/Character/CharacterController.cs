@@ -238,6 +238,12 @@ public class PlayerController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        // Si el jugador está tocando el punto débil, no hacemos nada
+        if (hit.collider.GetComponent<PuntoDebil>() != null)
+        {
+            Debug.Log("🎯 Tocado el punto débil. No se quita vida.");
+            return;
+        }
         if (hit.collider.CompareTag("Mancha"))
         {
             ManchaEnemiga mancha = hit.collider.GetComponent<ManchaEnemiga>();

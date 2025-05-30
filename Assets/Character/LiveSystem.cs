@@ -9,6 +9,21 @@ public class LiveSystem : MonoBehaviour
     private int currentLives;
     public Transform respawnPoint;
     public TextMeshProUGUI livesText;
+    private float ultimoDaño = -999f;
+    public float tiempoInvulnerabilidad = 1.0f;
+    private float tiempoInvulnerabilidadPorPuntoDebil = 2f;
+    private bool vulnerable = true;
+
+    public void ActivarInmunidadCorta()
+    {
+        vulnerable = false;
+        Invoke(nameof(ReactivarVulnerabilidad), tiempoInvulnerabilidadPorPuntoDebil);
+    }
+
+    private void ReactivarVulnerabilidad()
+    {
+        vulnerable = true;
+    }
 
     void Start()
     {
@@ -32,10 +47,15 @@ public class LiveSystem : MonoBehaviour
             livesText.text = $"{currentLives}/{maxLives}";
         }
     }
-     public void QuitarVida()
+
+    public void QuitarVida()
     {
+        if (!vulnerable || Time.time - ultimoDaño < tiempoInvulnerabilidad)
+            return;
+
+        ultimoDaño = Time.time;
         currentLives--;
-        Debug.Log("Vidas restantes: " + currentLives);
+        Debug.Log("💥 Vidas restantes: " + currentLives);
 
         if (currentLives <= -1)
         {
