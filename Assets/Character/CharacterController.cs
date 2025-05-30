@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     public bool IsGrounded { get; private set; }
     public float CurrentYaw => yaw;
 
+    private bool recentlyExitedLadder = false;
+
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -67,12 +70,12 @@ public class PlayerController : MonoBehaviour
 
         if (isOnLadder)
         {
-            
+
 
             float verticalInput = Input.GetAxis("Vertical");
-            
+
             Vector3 ladderMovement = new Vector3(0f, verticalInput * currentSpeed, 0f);
-            
+
             characterController.Move(ladderMovement * Time.deltaTime);
 
             animator.SetBool("isOnLadder", true);
@@ -103,38 +106,27 @@ public class PlayerController : MonoBehaviour
 
     void HandleRotation()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        yaw += mouseX * mouseSensitivity;
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-        if (IsMoving)
+        if (horizontal < 0)
         {
-            Quaternion targetRotation = Quaternion.Euler(0f, yaw, 0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            // Mira a la izquierda
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+        }
+        else if (horizontal > 0)
+        {
+            // Mira a la derecha
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        else if (vertical > 0)
+        {
+            // Mira hacia adelante
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Ladder"))
-        {
-            isOnLadder = true;
-            velocity = Vector3.zero;
-
-            Vector3 centerXZ = new Vector3(other.bounds.center.x, transform.position.y, other.bounds.center.z);
-            transform.position = centerXZ;
-
-            // Girar hacia la escalera
-            Vector3 lookDirection = -other.transform.forward;
-            lookDirection.y = 0f;
-            transform.rotation = Quaternion.LookRotation(lookDirection);
-
-            animator.SetBool("isOnLadder", true);
-        }
-
-
-    }
-
-
+    
     void OnTriggerExit(Collider other)
     {
 
@@ -153,7 +145,6 @@ public class PlayerController : MonoBehaviour
         animator?.SetBool("IsGrounded", IsGrounded);
         animator?.SetFloat("VerticalSpeed", velocity.y);
     }
-
     void ExitLadder()
     {
         isOnLadder = false;
@@ -165,47 +156,18 @@ public class PlayerController : MonoBehaviour
         characterController.Move(offset);
 
         Debug.Log("ExitLadder ejecutado");
+
+        // Activamos el cooldown
+        recentlyExitedLadder = true;
+        Invoke(nameof(ResetLadderCooldown), 0.4f);  // 0.4 segundos de margen
     }
 
-    void OnTriggerStay(Collider other)
-    {
-        float verticalInput = Input.GetAxis("Vertical");
-
-        if (other.CompareTag("LadderBottom"))
+        void ResetLadderCooldown()
         {
-            Debug.Log("🧩 Dentro del LadderBottom");
-
-            if (!isOnLadder && verticalInput > 0f)
-            {
-                Debug.Log("⬆ Entrando a la escalera desde abajo");
-                EnterLadder(other, false); // Desde abajo
-            }
-            else if (isOnLadder && verticalInput < 0f)
-            {
-                Debug.Log("⬇ Saliendo de la escalera hacia abajo");
-                ExitLadder();
-            }
+            recentlyExitedLadder = false;
         }
 
-        if (other.CompareTag("LadderTop"))
-        {
-            Debug.Log(isOnLadder);
-            Debug.Log(verticalInput);
-            Debug.Log("🧩 Dentro del LadderTop");
 
-            if (!isOnLadder && verticalInput < 0f)
-            {
-                Debug.Log("⬇ Entrando a la escalera desde arriba");
-                EnterLadder(other, true); // Desde arriba
-            }
-            else if (isOnLadder && verticalInput > 0f)
-            {
-                Debug.Log("⬆ Saliendo de la escalera hacia arriba");
-                ExitLadder();
-            }
-        }
-
-    }
 
     void EnterLadder(Collider trigger, bool desdeArriba)
     {
@@ -222,10 +184,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // Si entra desde arriba, lo bajamos un poco más para "encajarlo" dentro de la escalera
-        float snapY = desdeArriba ? snapPoint.position.y - 0.1f : transform.position.y;
+        transform.position = snapPoint.position;
 
-        Vector3 snapPosition = new Vector3(snapPoint.position.x, snapY, snapPoint.position.z);
-        transform.position = snapPosition;
 
         // Girar hacia la escalera
         Vector3 lookDirection = -trigger.transform.parent.forward;
@@ -235,7 +195,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isOnLadder", true);
         Debug.Log("🎯 Entró a la escalera correctamente alineado al SnapPoint");
     }
-    
+
     public void Rebotar()
     {
         // Rebote más suave que un salto normal
@@ -244,8 +204,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    // Puedes eliminar este método entero de PlayerController:
-        void OnControllerColliderHit(ControllerColliderHit hit)
+    void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.collider.CompareTag("Mancha"))
         {
@@ -256,7 +215,47 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void TocarLadderBottom(Collider trigger)
+    {
+        float verticalInput = Input.GetAxis("Vertical");
+
+        if (!isOnLadder && verticalInput > 0f)
+        {
+            Debug.Log("⬆ Entrando a la escalera desde abajo");
+            EnterLadderFrom(trigger, false);
+        }
+        else if (isOnLadder && verticalInput < 0f)
+        {
+            Debug.Log("⬇ Saliendo de la escalera hacia abajo");
+            ExitLadder();
+        }
+    }
 
 
+    public void TocarLadderTop(Collider trigger)
+    {
+        float verticalInput = Input.GetAxis("Vertical");
+
+        if (recentlyExitedLadder)
+        {
+            return; // Ignora entrada/salida por cooldown
+        }
+
+        if (!isOnLadder && verticalInput < 0f)
+        {
+            Debug.Log("⬇ Entrando a la escalera desde arriba");
+            EnterLadderFrom(trigger, true);
+        }
+        else if (isOnLadder && verticalInput > 0f)
+        {
+            Debug.Log("⬆ Saliendo de la escalera hacia arriba");
+            ExitLadder();
+        }
+    }
+
+    public void EnterLadderFrom(Collider trigger, bool desdeArriba)
+    {
+        EnterLadder(trigger, desdeArriba);
+    }
 
 }
