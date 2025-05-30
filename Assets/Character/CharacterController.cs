@@ -106,22 +106,21 @@ public class PlayerController : MonoBehaviour
 
     void HandleRotation()
     {
+        if (isOnLadder) return;
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
         if (horizontal < 0)
         {
-            // Mira a la izquierda
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
         }
         else if (horizontal > 0)
         {
-            // Mira a la derecha
             transform.rotation = Quaternion.Euler(0f, 90f, 0f);
         }
         else if (vertical > 0)
         {
-            // Mira hacia adelante
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
@@ -188,9 +187,8 @@ public class PlayerController : MonoBehaviour
 
 
         // Girar hacia la escalera
-        Vector3 lookDirection = -trigger.transform.parent.forward;
-        lookDirection.y = 0f;
-        transform.rotation = Quaternion.LookRotation(lookDirection);
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f); // Mira al frente siempre
+
 
         animator.SetBool("isOnLadder", true);
         Debug.Log("🎯 Entró a la escalera correctamente alineado al SnapPoint");
@@ -203,18 +201,6 @@ public class PlayerController : MonoBehaviour
         animator?.SetBool("isJumping", true); // activa animación de salto si quieres
     }
 
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.collider.CompareTag("Mancha"))
-        {
-            ManchaEnemiga mancha = hit.collider.GetComponent<ManchaEnemiga>();
-            if (mancha != null)
-            {
-                mancha.SerTocado(transform);
-            }
-        }
-    }
     public void TocarLadderBottom(Collider trigger)
     {
         float verticalInput = Input.GetAxis("Vertical");
@@ -236,17 +222,8 @@ public class PlayerController : MonoBehaviour
     {
         float verticalInput = Input.GetAxis("Vertical");
 
-        if (recentlyExitedLadder)
-        {
-            return; // Ignora entrada/salida por cooldown
-        }
-
-        if (!isOnLadder && verticalInput < 0f)
-        {
-            Debug.Log("⬇ Entrando a la escalera desde arriba");
-            EnterLadderFrom(trigger, true);
-        }
-        else if (isOnLadder && verticalInput > 0f)
+        // 🚫 No permitimos volver a entrar desde arriba bajo ninguna circunstancia
+        if (isOnLadder && verticalInput > 0f)
         {
             Debug.Log("⬆ Saliendo de la escalera hacia arriba");
             ExitLadder();
