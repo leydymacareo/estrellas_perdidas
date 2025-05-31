@@ -14,6 +14,7 @@ public class ColorReactiveObject : MonoBehaviour
     {
         objectRenderer = GetComponent<Renderer>(); // Obtiene el Renderer
         objectCollider = GetComponent<Collider>(); // Intenta obtener un Collider (podría ser nulo si no hay)
+        Debug.Log($"Collider {this.name}: {objectCollider.name}");
 
         if (objectRenderer == null)
         {
@@ -39,10 +40,14 @@ public class ColorReactiveObject : MonoBehaviour
         // Establece el color visual del objeto a su color original al inicio del juego
         ApplyObjectColor(objectColor);
 
+        Debug.Log($"Start {this.name}");
+        Debug.Log($"Start {this.name} {ColorManager.Instance != null}, {ColorManager.Instance.mainCamera != null}, {ColorManager.Instance.mainCamera.clearFlags == CameraClearFlags.SolidColor}");
+        Debug.Log($"{ColorManager.Instance.mainCamera.name}");
+
         // Asegúrate de que el objeto reaccione al color de fondo actual si el ColorManager ya está inicializado
         // Importante: Al inicio el fondo será Skybox, por lo que los objetos estarán visibles.
         // Solo reacciona si el fondo ya es un color sólido (no Skybox)
-        if (ColorManager.Instance != null && ColorManager.Instance.mainCamera != null && ColorManager.Instance.mainCamera.clearFlags == CameraClearFlags.SolidColor)
+        if (ColorManager.Instance != null && ColorManager.Instance.mainCamera != null && ColorManager.Instance.mainCamera.clearFlags == CameraClearFlags.Skybox)
         {
             OnBackgroundColorChanged(ColorManager.Instance.currentColor);
         }
@@ -51,6 +56,7 @@ public class ColorReactiveObject : MonoBehaviour
     // Método que se llama cuando el color de fondo cambia (gracias al evento del ColorManager)
     private void OnBackgroundColorChanged(Color newBackgroundColor)
     {
+        Debug.Log($"OnBackgroundColorChanged {this.name} {newBackgroundColor}");
         // Compara el color del objeto con el nuevo color de fondo (usando una pequeña tolerancia por si acaso)
         // Pero es fundamental que los valores de color en el Inspector sean EXACTOS (0 o 255).
         if (ColorManager.Instance != null && ColorManager.Instance.ColorsAreApproximatelyEqual(objectColor, newBackgroundColor, 0.01f)) // Ahora usa la función pública
