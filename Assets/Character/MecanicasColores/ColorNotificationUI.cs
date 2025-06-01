@@ -12,7 +12,7 @@ public class ColorNotificationUI : MonoBehaviour
     public TextMeshProUGUI notificationText; // Usa TextMeshProUGUI si tu texto es TextMeshPro. Si usas Text legacy, cámbialo a 'public UnityEngine.UI.Text notificationText;'
 
     [Tooltip("Duración que la notificación permanecerá visible en segundos.")]
-    public float displayDuration = 3f;
+    public float displayDuration = 5f;
 
     private Coroutine displayCoroutine; // Para controlar la corutina de ocultar la notificación
 
@@ -67,12 +67,13 @@ public class ColorNotificationUI : MonoBehaviour
             StopCoroutine(displayCoroutine);
         }
 
-        // Construye el texto de la notificación
-        notificationText.text = "¡Color Desbloqueado!\n" +
-                                unlockedColor.colorName.ToUpper() + " [" + GetKeyString(unlockedColor.hotkey) + "]";
-        
-        // Opcional: Cambia el color del texto al color que fue desbloqueado
-        notificationText.color = unlockedColor.color;
+        string colorHex = ColorUtility.ToHtmlStringRGB(unlockedColor.color);
+
+        notificationText.text = $"<b>¡Color <color=#{colorHex}>{unlockedColor.colorName.ToLower()}</color> desbloqueado!</b>\nPresiona <b>[{GetKeyString(unlockedColor.hotkey)}]</b> para activarlo.";
+
+        Color colorBase;
+        ColorUtility.TryParseHtmlString("#F1E2C9", out colorBase);
+        notificationText.color = colorBase;
 
         notificationPanel.SetActive(true); // Muestra el panel de notificación
 
