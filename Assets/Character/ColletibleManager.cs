@@ -72,7 +72,7 @@ public class CollectibleManager : MonoBehaviour
     {
         if (itemCounter != null)
         {
-            itemCounter.text = $"{itemsCollected} / {totalItemsScene}";
+            itemCounter.text = $"{itemsCollected}/{totalItemsScene}";
         }
     }
 }
