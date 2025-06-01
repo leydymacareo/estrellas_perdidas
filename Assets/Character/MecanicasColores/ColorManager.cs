@@ -7,6 +7,7 @@ public class ColorManager : MonoBehaviour
     public static ColorManager Instance { get; private set; }
 
     [System.Serializable]
+    
     public class AvailableGameColor
     {
         public Color color;
@@ -22,6 +23,7 @@ public class ColorManager : MonoBehaviour
 
     public Camera mainCamera;
     public Color currentColor;
+    private bool fondoPersonalizadoActivo = false;
 
     public delegate void OnBackgroundColorChange(Color newColor);
     public static event OnBackgroundColorChange onBackgroundColorChange;
@@ -105,11 +107,22 @@ public class ColorManager : MonoBehaviour
                 Debug.Log("Fondo cambiado a " + gameColor.colorName + " por hotkey: [" + gameColor.hotkey.ToString() + "].");
             }
         }
+        // Restaurar color original con tecla 0
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (fondoPersonalizadoActivo)
+            {
+                RestaurarColorOriginal();
+                Debug.Log("🎨 Fondo restaurado al color original (skybox)");
+            }
+        }
+
     }
 
     public void SetBackgroundColor(Color newColor)
     {
         currentColor = newColor;
+        fondoPersonalizadoActivo = true;
         if (mainCamera != null)
         {
             mainCamera.clearFlags = CameraClearFlags.SolidColor;
@@ -129,6 +142,22 @@ public class ColorManager : MonoBehaviour
         {
             Debug.LogError("ColorManager: La referencia a 'mainCamera' es nula al intentar restaurar el Skybox.", this);
         }
+    }
+    public void RestaurarColorOriginal()
+    {
+        fondoPersonalizadoActivo = false;
+
+        if (mainCamera != null)
+        {
+            mainCamera.clearFlags = originalClearFlags;
+        }
+        else
+        {
+            Debug.LogError("ColorManager: La referencia a 'mainCamera' es nula al intentar restaurar el Skybox.");
+        }
+
+        if (onBackgroundColorChange != null)
+            onBackgroundColorChange(Color.clear); // También puedes pasar un color neutro si lo necesitas
     }
 
     public void UnlockColor(Color colorToUnlock)
