@@ -11,9 +11,9 @@ public class LiveSystem : MonoBehaviour
     public TextMeshProUGUI livesText;
     private float ultimoDaño = -999f;
     public float tiempoInvulnerabilidad = 1.0f;
-   
 
-
+    [Header("Pantalla de Game Over")]
+    public GameObject gameOverPanel; // Asigna el panel desde el inspector
 
     void Start()
     {
@@ -51,7 +51,8 @@ public class LiveSystem : MonoBehaviour
 
         if (currentLives <= -1)
         {
-            SceneManager.LoadScene("PlatformerGame"); // Reiniciar escena
+            GameOver();
+            return;
         }
         else
         {
@@ -89,6 +90,24 @@ public class LiveSystem : MonoBehaviour
             Debug.Log("Vida agregada. Vidas actuales: " + currentLives);
         }
     }
+
+    private void GameOver()
+    {
+        Debug.Log("🛑 Game Over - sin vidas");
+
+        Time.timeScale = 0f; // Pausar el juego
+
+        // 🔓 Mostrar y desbloquear el cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
+    }
+
+
 
     
 }
