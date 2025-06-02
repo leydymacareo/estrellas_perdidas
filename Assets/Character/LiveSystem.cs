@@ -106,9 +106,5 @@ public class LiveSystem : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
     }
-
-
-
-    
 }
 
